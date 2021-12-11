@@ -13,7 +13,7 @@ from moviepy.video.io.VideoFileClip import VideoFileClip
 
 GET = "GET"
 POST = "POST"
-TOKEN_EXPIRES_IN_SECONDS = 3000
+TOKEN_EXPIRES_IN_SECONDS = 300
 SECRET_KEY = "LOGIN_JWT_SECRET"
 
 app = Flask(__name__, static_url_path="")
@@ -36,11 +36,16 @@ def setup():
     log.setLevel(logging.DEBUG)
 
 
-@app.route('/generate', methods=['POST'])
+@app.route('/token', methods=['GET'])
 @jwt_required()
+def check_token():
+    current_user = get_jwt_identity()
+    access_token = create_access_token(identity=current_user)
+    return access_token
+
+@app.route('/generate', methods=['POST'])
 def generate():
     content = request.json
-    # current_user = get_jwt_identity()
     name = str(uuid.uuid4())
 
     timestamps = content['timestamps']
@@ -173,7 +178,7 @@ def loginRequest():
 
 @app.route("/logout", methods=["GET"])
 def logout():
-    return 'logout'\
+    return 'logout'
 
 @app.route("/videos", methods=["GET"])
 def videos():
@@ -182,30 +187,30 @@ def videos():
 mock = [
     {
         "title": 'Loki',
-        "id": 'asdadwd',
+        "id": 'ojrvsldmm12lji4iu49',
         "ulr": 'http:/www/awdwad',
         "image": 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/online_9.jpg',
 
     }, {
         "title": 'Capitan Marvel',
-        "id": 'asdadwd1',
+        "id": 'no32f9v2dnm3i',
         "ulr": 'http:/www/awdwad',
         "image": 'https://static.posters.cz/image/750/plakaty/captain-marvel-epic-i71851.jpg',
 
     }, {
         "title": 'Guardian of the Galaxy',
-        "id": 'asdadwd2',
+        "id": 'vnoi23fo4jdm,s',
         "ulr": 'http:/www/awdwad',
         "image": 'https://m.media-amazon.com/images/I/71pAQsmvQyL._AC_SL1000_.jpg',
     }, {
         "title": 'Infinty Gauntlet',
-        "id": 'asdadwd',
+        "id": 'f0j4fn9m3s2jf3rm',
         "ulr": 'http:/www/awdwad',
         "image": 'https://static.posters.cz/image/750/plakaty/marvel-retro-the-infinity-gauntlet-i59015.jpg',
 
     }, {
         "title": 'Loki',
-        "id": 'asdadwd',
+        "id": 'f3m9f98ism3idjjng3i4',
         "ulr": 'http:/www/awdwad',
         "image": 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/online_9.jpg',
     },
