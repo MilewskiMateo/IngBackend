@@ -1,5 +1,4 @@
 import hashlib
-import logging
 import os
 import re
 import uuid
@@ -31,11 +30,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 jwt = JWTManager(app)
 
-
-def setup():
-    log.setLevel(logging.DEBUG)
-
-
 @app.route('/token', methods=['GET'])
 @jwt_required()
 def check_token():
@@ -43,25 +37,26 @@ def check_token():
     access_token = create_access_token(identity=current_user)
     return access_token
 
+
 @app.route('/generate', methods=['POST'])
 def generate():
     content = request.json
     name = str(uuid.uuid4())
 
     timestamps = content['timestamps']
-    VideoClips = []
+    video_clips = []
     if len(timestamps) > 0:
         for stamp in timestamps:
             if stamp >= 5:
                 stamp = stamp - 5
-            VideoClips.append(VideoFileClip("Videos/3.mp4").subclip(stamp, stamp + 4))
+            video_clips.append(VideoFileClip("Videos/3.mp4").subclip(stamp, stamp + 4))
 
-        final_clip = concatenate_videoclips(VideoClips)
+        final_clip = concatenate_videoclips(video_clips)
         final_clip.write_videofile("Compilations/" + name + ".webm")
 
         return jsonify({"address": name})
-    else:
-        return 'No timestamps provided'
+
+    return 'No timestamps provided'
 
 
 def get_chunk_compilation(identity, byte1=None, byte2=None):
@@ -96,9 +91,16 @@ def get_compilation(identity):
             byte2 = int(groups[1])
 
     chunk, start, length, file_size = get_chunk_compilation(identity, byte1, byte2)
-    resp = Response(chunk, 206, mimetype='video/webm',
-                    content_type='video/webm', direct_passthrough=True)
-    resp.headers.add('Content-Range', 'bytes {0}-{1}/{2}'.format(start, start + length - 1, file_size))
+    resp = Response(
+        chunk, 206,
+        mimetype='video/webm',
+        content_type='video/webm',
+        direct_passthrough=True
+    )
+    resp.headers.add(
+        'Content-Range',
+        f'bytes {start}-{start + length - 1}/{file_size}'
+    )
     return resp
 
 
@@ -136,7 +138,7 @@ def get_file():
     chunk, start, length, file_size = get_chunk(byte1, byte2)
     resp = Response(chunk, 206, mimetype='video/mp4',
                     content_type='video/mp4', direct_passthrough=True)
-    resp.headers.add('Content-Range', 'bytes {0}-{1}/{2}'.format(start, start + length - 1, file_size))
+    resp.headers.add('Content-Range', f'bytes {start}-{start + length - 1}/{file_size}')
     return resp
 
 
@@ -147,42 +149,43 @@ def after_request(response):
 
 
 @app.route("/registration/register", methods=["POST"])
-def addUser():
+def add_user():
     login = request.json['login']
     login_hash = hashlib.sha512(login.encode("utf-8")).hexdigest()
-    if (db.exists(login_hash)):
+
+    if db.exists(login_hash):
         return jsonify({"responseMessage": "Użytkownik o takim loginie już istnieje"}), 401
-    else:
-        myDict = request.json
-        myDict['password'] = hashlib.sha512(myDict['password'].encode("utf-8")).hexdigest()
-        db.hmset(login_hash, myDict)
-        return jsonify({"responseMessage": "Udało się"}), 200
+
+    my_dict = request.json
+    my_dict['password'] = hashlib.sha512(my_dict['password'].encode("utf-8")).hexdigest()
+    db.hmset(login_hash, my_dict)
+    return jsonify({"responseMessage": "Udało się"}), 200
 
 
 @app.route("/login/log", methods=["POST"])
-def loginRequest():
+def login_request():
     login = request.json['login']
     password_hash = hashlib.sha512(request.json['password'].encode("utf-8")).hexdigest()
     login_hash = hashlib.sha512(login.encode("utf-8")).hexdigest()
-    if (db.exists(login_hash)):
-        if (db.hget(login_hash, 'password') == password_hash):
-
+    if db.exists(login_hash):
+        if db.hget(login_hash, 'password') == password_hash:
             access_token = create_access_token(identity=login_hash)
             return access_token
-        else:
-            return jsonify({"responseMessage": "Dane logowania niepoprawne"}), 401
 
-    else:
         return jsonify({"responseMessage": "Dane logowania niepoprawne"}), 401
+
+    return jsonify({"responseMessage": "Dane logowania niepoprawne"}), 401
 
 
 @app.route("/logout", methods=["GET"])
 def logout():
     return 'logout'
 
+
 @app.route("/videos", methods=["GET"])
 def videos():
     return jsonify(mock)
+
 
 mock = [
     {
