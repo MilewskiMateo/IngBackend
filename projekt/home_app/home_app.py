@@ -191,30 +191,25 @@ mock = [
     {
         "title": 'Loki',
         "id": 'ojrvsldmm12lji4iu49',
-        "ulr": 'http:/www/awdwad',
         "image": 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/online_9.jpg',
 
     }, {
         "title": 'Capitan Marvel',
         "id": 'no32f9v2dnm3i',
-        "ulr": 'http:/www/awdwad',
         "image": 'https://static.posters.cz/image/750/plakaty/captain-marvel-epic-i71851.jpg',
 
     }, {
-        "title": 'Guardian of the Galaxy',
+        "title": '12 angry man',
         "id": 'vnoi23fo4jdm,s',
-        "ulr": 'http:/www/awdwad',
-        "image": 'https://m.media-amazon.com/images/I/71pAQsmvQyL._AC_SL1000_.jpg',
+        "image": 'https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/e6520b78339627.5ca24af435882.png',
     }, {
         "title": 'Infinty Gauntlet',
         "id": 'f0j4fn9m3s2jf3rm',
-        "ulr": 'http:/www/awdwad',
         "image": 'https://static.posters.cz/image/750/plakaty/marvel-retro-the-infinity-gauntlet-i59015.jpg',
 
     }, {
         "title": 'Loki',
         "id": 'f3m9f98ism3idjjng3i4',
-        "ulr": 'http:/www/awdwad',
         "image": 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/online_9.jpg',
     },
 ]
