@@ -1,7 +1,7 @@
 # IngBackend
 backend do pracy inżynierskiej 
 
-odpalić komendą
+uruchmoić komendą
 `docker-compose up` 
 
-patrzeć na port 8080 http 
+aplikacja działa na portcie 8080 http 
