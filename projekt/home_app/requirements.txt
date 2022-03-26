@@ -3,4 +3,3 @@ gunicorn
 redis
 flask_cors
 moviepy
-flask-jwt-extended
