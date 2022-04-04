@@ -1,4 +1,3 @@
-import redis
 import re
 
 from flask import Flask, request, jsonify, Response
@@ -25,20 +24,16 @@ def generate():
 
     return 'No timestamps provided'
 
-@app.route('/compilation/<identity>')
-def get_compilation(identity):
+@app.route('/compilation/<id>')
+def get_compilation(id):
     range_header = request.headers.get('Range', None)
     byte1, byte2 = 0, None
     if range_header:
         match = re.search(r'(\d+)-(\d*)', range_header)
-        groups = match.groups()
+        if groups[0]: byte1 = int(match.groups()[0])
+        if groups[1]: byte2 = int(match.groups()[1])
 
-        if groups[0]:
-            byte1 = int(groups[0])
-        if groups[1]:
-            byte2 = int(groups[1])
-
-    chunk, start, length, file_size = stream_compilation(identity, byte1, byte2)
+    chunk, start, length, file_size = stream_compilation(id, byte1, byte2)
     resp = Response(
         chunk, 206,
         mimetype='video/webm',

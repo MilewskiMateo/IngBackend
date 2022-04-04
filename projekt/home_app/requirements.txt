@@ -1,5 +1,4 @@
 Flask
 gunicorn
-redis
 flask_cors
 moviepy
