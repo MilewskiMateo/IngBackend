@@ -2,7 +2,7 @@ import re
 
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
-from BackendLogic import generate_compiation, stream_compilation
+from BackendLogic import StreamLogic, GenerateLogic
 
 GET = "GET"
 POST = "POST"
@@ -20,7 +20,7 @@ def generate():
     timestamps = content['timestamps']
 
     if len(timestamps) > 0:
-        return jsonify({"address": generate_compiation(timestamps)})
+        return jsonify({"address": GenerateLogic.generate_compiation(timestamps)})
 
     return 'No timestamps provided'
 
@@ -30,10 +30,12 @@ def get_compilation(id):
     byte1, byte2 = 0, None
     if range_header:
         match = re.search(r'(\d+)-(\d*)', range_header)
-        if groups[0]: byte1 = int(match.groups()[0])
-        if groups[1]: byte2 = int(match.groups()[1])
+        groups = match.groups()
 
-    chunk, start, length, file_size = stream_compilation(id, byte1, byte2)
+        if groups[0]: byte1 = int(groups[0])
+        if groups[1]: byte2 = int(groups[1])
+
+    chunk, start, length, file_size = StreamLogic.stream_compilation(id, byte1, byte2)
     resp = Response(
         chunk, 206,
         mimetype='video/webm',

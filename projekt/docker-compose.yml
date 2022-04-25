@@ -1,12 +1,8 @@
-version: "3"
 services:
   web-login:
     build:
       context: .
-      dockerfile: ./Docker/login/Dockerfile
+      dockerfile: ./Docker/Dockerfile
     ports: ["8080:5000"]
-    volumes: [./BackendAPI:/BackendAPI]
     environment:
       FLASK_ENV: development
-  redis-db:
-    image: "redis:alpine"
